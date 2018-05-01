@@ -8,9 +8,10 @@ from PIL import Image
 import pytesseract
 import os
 
+#to extract text from image
 def extract_text(image,imagename):#variable , name of file
     pytesseract.pytesseract.tesseract_cmd = 'D:/new C/Tesseract-OCR/tesseract'
-    # load the example image and convert it to grayscale
+    # load the image and convert it to grayscale
     cv2.imwrite(imagename,image)
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     gray = cv2.medianBlur(gray, 3)
@@ -20,7 +21,7 @@ def extract_text(image,imagename):#variable , name of file
     text = pytesseract.image_to_string(Image.open(imagename))
     #print(text)
     return text
-
+#for identifying shapes 
 class ShapeDetector:
     def __init__(self):
         pass
@@ -71,6 +72,7 @@ class ShapeDetector:
 
         # return the name of the shape
         return shape
+#to turn image that was read using openCv (bgr) to (rgb)     
 def cv2mat(imagename , imagevar):
     cv2.imwrite(imagename,imagevar) 
     bgr_img = cv2.imread(imagename)  #reading image using openCV
@@ -79,6 +81,7 @@ def cv2mat(imagename , imagevar):
     #plt.imshow(rgb_img)
     return rgb_img
 
+#to show images on console
 def show_images(images, cols = 1, titles = None):
     """Display a list of images in a single figure with matplotlib.
     
@@ -104,19 +107,19 @@ def show_images(images, cols = 1, titles = None):
         a.set_title(title)
     fig.set_size_inches(np.array(2*fig.get_size_inches()) * n_images)
     plt.show()
-
+    
+#turn drawn flowchart to digital version
 def flowchart(image,outputname):
     white = 255*np.ones_like(image)
     white2 = image.copy()
     blurred = cv2.GaussianBlur(image, (5,5), 0)
-    
+    #resize the image
     resized = imutils.resize(blurred,width = 2* image.shape[1])
     ratio = image.shape[0] / float(resized.shape[0])
-    # convert the resized image to grayscale, blur it slightly,
-    # and threshold it    
+    # convert the resized image to grayscale
     gray = cv2.cvtColor(resized, cv2.COLOR_BGR2GRAY)
     
-    ##histogram eq
+    #histogram eq
     clahe = cv2.createCLAHE(clipLimit=4.0, tileGridSize=(4,4))
     equ = clahe.apply(gray)
     equ2 = cv2.fastNlMeansDenoising(equ,None,270,7,21)
@@ -125,11 +128,14 @@ def flowchart(image,outputname):
     blur = cv2.GaussianBlur(equ2,(25,25),0)
     ret3,th3 = cv2.threshold(blur,10,100,cv2.THRESH_BINARY+cv2.THRESH_OTSU)
     
+    #detect edges
     edge = cv2.Canny(th3,0,255,apertureSize = 3)
     
+    #opening image for less noise
     blurred = cv2.GaussianBlur(edge, (9,9), 0)
     kernel = np.ones((3,3),np.uint8)     
     MORPH_OPEN = cv2.morphologyEx(blurred, cv2.MORPH_OPEN, kernel)
+    
     # find contours in the thresholded image and initialize the
     # shape detector
     cnts = cv2.findContours(MORPH_OPEN.copy(), cv2.RETR_EXTERNAL,
