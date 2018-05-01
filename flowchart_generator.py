@@ -14,11 +14,9 @@ def extract_text(image,imagename):#variable , name of file
     cv2.imwrite(imagename,image)
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     gray = cv2.medianBlur(gray, 3)
-    # write the grayscale image to disk as a temporary file so we can
-    # apply OCR to it
+    # write the grayscale image to disk as a temporary file so we can apply OCR to it
     cv2.imwrite("ocr_gray.jpg", gray)
-    # load the image as a PIL/Pillow image, apply OCR, and then delete
-    # the temporary file
+    # load the image as a PIL/Pillow image, apply OCR, and then delete the temporary file
     text = pytesseract.image_to_string(Image.open(imagename))
     #print(text)
     return text
