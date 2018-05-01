@@ -1,22 +1,9 @@
-#remove useless ifs
-#cut images for text extraction
-#draw
-#import argparse
+# import the required packages
 import imutils
 import cv2
 import matplotlib
 import matplotlib.pyplot as plt
-#import skimage
-#from skimage import io|
-#from skimage import filters
 import numpy as np
-#from skimage import color
-#from skimage.color import rgb2gray
-#from skimage import data 
-#from scipy import misc
-#import scipy.ndimage
-#from scipy.misc.pilutil import Image
-# import the necessary packages
 from PIL import Image
 import pytesseract
 import os
