@@ -8,6 +8,8 @@ from PIL import Image
 import pytesseract
 import os
 
+thickness = 6
+
 #to extract text from image
 def extract_text(image,imagename):#variable , name of file
     pytesseract.pytesseract.tesseract_cmd = 'D:/new C/Tesseract-OCR/tesseract'
@@ -170,31 +172,31 @@ def flowchart(image,outputname):
             c *= ratio
             c = c.astype("int")
             cv2.drawContours(image, [c], -1, (0, 255, 0), 2)
-            cv2.putText(image, shape, (cX, cY), cv2.FONT_HERSHEY_SIMPLEX,3, (0, 255, 255), 5)
+            cv2.putText(image, shape, (cX+int(w/2), cY), cv2.FONT_HERSHEY_SIMPLEX,3, (0, 255, 255), 5)
             cropped = white2[y:y+h, x:x+w]           
 #            print(extract_text(cropped,'cropped.jpg'))
             cv2.putText(white, extract_text(cropped,'cropped.jpg'), (cX-int(w/4), cY), cv2.FONT_HERSHEY_SIMPLEX,2, (0, 0, 255), 3)
             if shape == "rectangle":
                 #(x,y) top left corner , (x+w,y+h) bottom right corner
-                draw = cv2.rectangle(white,(x,y),(x+w,y+h),(255,0,0),5)
+                draw = cv2.rectangle(white,(x,y),(x+w,y+h),(255,0,0),thickness)
             elif shape == "Diamond":
                 pts = np.array([[cX,cY-int(h/2)],[cX+int(w/2),cY],[cX,cY+int(h/2)],[cX-int(w/2),cY]], np.int32)
                 pts = pts.reshape((-1,1,2))
-                draw = cv2.polylines(white,[pts],True,(255,0,0),5)
+                draw = cv2.polylines(white,[pts],True,(255,0,0),thickness)
             elif shape == "parallelogram":
                 pts = np.array([[int(cX-(w/2)+a),int(cY-(h/2))],[int(cX+(w/2)+a),int(cY-(h/2))],[int(cX+(w/2)-a),int(cY+(h/2))],[int(cX-(w/2)-a),int(cY+(h/2))]], np.int32)
                 pts = pts.reshape((-1,1,2))
-                draw = cv2.polylines(white,[pts],True,(255,0,0),5)
+                draw = cv2.polylines(white,[pts],True,(255,0,0),thickness)
             elif shape == "ellipse":
                 # center location, (major axis length, minor axis length)
                 #next angle , start angle,end angle ,color,thickness(when -1 fills ellipse)
-                draw = cv2.ellipse(white,(cX,cY),(int(w/2),int(h/2)),0,0,360,255,5)
+                draw = cv2.ellipse(white,(cX,cY),(int(w/2),int(h/2)),0,0,360,255,thickness)
             elif shape == "arrow":
                 draw = cv2.line(white,(x,y+h),(x,y),(255,0,0),5)
-                draw = cv2.line(white,(x,y+h),(x+int(h/6),y+h-int(h/6)),(255,0,0),5)
-                draw = cv2.line(white,(x,y+h),(x-int(h/6),y+h-int(h/6)),(255,0,0),5)
+                draw = cv2.line(white,(x,y+h),(x+int(h/6),y+h-int(h/6)),(255,0,0),thickness)
+                draw = cv2.line(white,(x,y+h),(x-int(h/6),y+h-int(h/6)),(255,0,0),thickness)
             else:
-                draw = cv2.rectangle(white,(x,y),(x+w,y+h),(255,0,0),3)
+                draw = cv2.rectangle(white,(x,y),(x+w,y+h),(255,0,0),thickness)
             	 #show the output image
 #                cv2.namedWindow('Image', cv2.WINDOW_NORMAL)
 #                cv2.imshow("Image", image)
