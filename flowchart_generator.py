@@ -1,14 +1,12 @@
 # import the required packages
 import imutils
 import cv2
-import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
 from PIL import Image
 import pytesseract
-import os
 
-thickness = 6
+thickness = 10
 
 #to extract text from image
 def extract_text(image,imagename):#variable , name of file
@@ -107,13 +105,13 @@ def show_images(images, cols = 1, titles = None):
             plt.gray()
         plt.imshow(image)
         a.set_title(title)
-    fig.set_size_inches(np.array(2*fig.get_size_inches()) * n_images)
+    fig.set_size_inches(np.array(3*fig.get_size_inches()) * n_images)
     plt.show()
     
 #turn drawn flowchart to digital version
 def flowchart(image,outputname):
     white = 255*np.ones_like(image)
-    white2 = image.copy()
+    white2 = image.copy() 
     blurred = cv2.GaussianBlur(image, (5,5), 0)
     #resize the image
     resized = imutils.resize(blurred,width = 2* image.shape[1])
@@ -172,7 +170,7 @@ def flowchart(image,outputname):
             c *= ratio
             c = c.astype("int")
             cv2.drawContours(image, [c], -1, (0, 255, 0), 2)
-            cv2.putText(image, shape, (cX+int(w/2), cY), cv2.FONT_HERSHEY_SIMPLEX,3, (0, 255, 255), 5)
+            cv2.putText(image, shape, (cX+int(w/2), cY), cv2.FONT_HERSHEY_SIMPLEX,3, (0, 0, 0), 5)
             cropped = white2[y:y+h, x:x+w]           
 #            print(extract_text(cropped,'cropped.jpg'))
             cv2.putText(white, extract_text(cropped,'cropped.jpg'), (cX-int(w/4), cY), cv2.FONT_HERSHEY_SIMPLEX,2, (0, 0, 255), 3)
@@ -198,16 +196,14 @@ def flowchart(image,outputname):
             else:
                 draw = cv2.rectangle(white,(x,y),(x+w,y+h),(255,0,0),thickness)
             	 #show the output image
-#                cv2.namedWindow('Image', cv2.WINDOW_NORMAL)
-#                cv2.imshow("Image", image)
-#                cv2.waitKey(0)
-#    cv2.destroyAllWindows()
+    cv2.namedWindow('Image', cv2.WINDOW_NORMAL)
+    cv2.imshow("Image", image)
     cv2.namedWindow('white', cv2.WINDOW_NORMAL)
     cv2.imshow("white", white)
     cv2.waitKey(0)
     cv2.destroyAllWindows()
     images = [cv2mat(outputname , image) ,cv2mat(outputname , white) ]
-    show_images(images, cols = 1, titles = None)
+    show_images(images, cols = 2, titles = None)
 
                 
 img = cv2.imread('input.jpg')    
